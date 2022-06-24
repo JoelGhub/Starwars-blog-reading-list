@@ -1,4 +1,7 @@
+
 const getState = ({ getStore, getActions, setStore }) => {
+	
+
 	return {
 		store: {
 			demo: [
@@ -12,7 +15,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 					background: "white",
 					initial: "white"
 				}
-			]
+			],
+			characters : [],
+			planets : [],
+			favorites : [],
+		
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -24,6 +31,40 @@ const getState = ({ getStore, getActions, setStore }) => {
 					fetch().then().then(data => setStore({ "foo": data.bar }))
 				*/
 			},
+			getCharacters:() => {
+				fetch("https://swapi.dev/api/people")
+					.then(res => res.json())
+					.then(data => setStore({characters: data.results}))
+					
+			 },
+			// getCharactersId:(index) => {
+			// 	fetch("https://swapi.dev/api/people/"+index)
+			// 		.then(res => res.json())
+					
+			// 		.then(data => setStore({index: data.results}))
+					
+			// },
+			getPlanets:() => {
+				fetch("https://swapi.dev/api/planets")
+					.then(res => res.json())
+					.then(data => setStore({planets: data.results}))
+					
+			},
+			addFavorites:(name) =>{
+				const store = getStore()
+				
+			
+					setStore({favorites: store.favorites.concat(name)})
+					
+			},
+			
+			deleteFavorites:(id) =>{
+				const store = getStore()
+				
+				setStore({favorites: store.favorites.filter((item,index) => index !== id)})
+				
+
+			},
 			changeColor: (index, color) => {
 				//get the store
 				const store = getStore();
@@ -34,7 +75,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					if (i === index) elm.background = color;
 					return elm;
 				});
-
+				
 				//reset the global store
 				setStore({ demo: demo });
 			}
